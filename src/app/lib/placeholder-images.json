@@ -1,0 +1,23 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-coding",
+      "description": "Abstract coding background",
+      "imageUrl": "https://picsum.photos/seed/optimalcp1/1200/600",
+      "imageHint": "coding programming"
+    },
+    {
+      "id": "avatar-user",
+      "description": "User avatar placeholder",
+      "imageUrl": "https://picsum.photos/seed/user/150/150",
+      "imageHint": "person avatar"
+    },
+    {
+      "id": "roadmap-icon",
+      "description": "Learning path graphic",
+      "imageUrl": "https://picsum.photos/seed/path/400/300",
+      "imageHint": "path journey"
+    }
+  ]
+}

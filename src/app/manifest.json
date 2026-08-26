@@ -1,0 +1,19 @@
+{
+  "name": "OptimalCP | أتقن البرمجة التنافسية",
+  "short_name": "OptimalCP",
+  "description": "المنصة الأكاديمية العربية الأولى لتدريب المبرمجين على الخوارزميات والبرمجة التنافسية.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

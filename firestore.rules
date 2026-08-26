@@ -1,0 +1,59 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // دالة للتحقق من تسجيل الدخول
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // دالة للتحقق من هوية صاحب البيانات
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // دالة للتحقق مما إذا كان المستخدم مديراً (Admin)
+    function isAdmin() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // دالة للتحقق مما إذا كان المستخدم واضع مسائل أو مديراً
+    function isProblemSetter() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'problem_setter'];
+    }
+
+    // قواعد حماية المستخدمين
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAdmin() || (
+        isOwner(userId) && 
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'xp', 'solved', 'uid', 'email', 'createdAt'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // قواعد حماية المسائل البرمجية
+    match /problems/{problemId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isProblemSetter();
+      allow delete: if isAdmin();
+    }
+
+    // قواعد حماية تذاكر الدعم - السماح لواضعي المسائل بالمتابعة أيضاً
+    match /support_tickets/{ticketId} {
+      allow read: if isProblemSetter();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // قواعد حماية خارطة الطريق (Admins Only)
+    match /roadmap/{stageId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

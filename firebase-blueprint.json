@@ -1,0 +1,84 @@
+
+{
+  "entities": {
+    "User": {
+      "title": "UserProfile",
+      "description": "بيانات ملف المبرمج التعليمي في Firestore",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "problem_setter", "trainee"] },
+        "xp": { "type": "number" },
+        "solved": { "type": "number" },
+        "country": { "type": "string" },
+        "cfHandle": { "type": "string" },
+        "lastActivity": { "type": "string", "format": "date-time" },
+        "isCfVerified": { "type": "boolean" }
+      },
+      "required": ["uid", "username", "email", "role"]
+    },
+    "Problem": {
+      "title": "Problem",
+      "description": "تفاصيل المسألة البرمجية في Firestore مع نظام الأرشفة والحالات",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "statement": { "type": "string" },
+        "difficulty": { "type": "string", "enum": ["Easy", "Medium", "Hard", "Expert"] },
+        "category": { "type": "string" },
+        "rating": { "type": "number" },
+        "sourceUrl": { "type": "string" },
+        "inputFormat": { "type": "string" },
+        "outputFormat": { "type": "string" },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "input": { "type": "string" },
+              "output": { "type": "string" },
+              "explanation": { "type": "string" }
+            }
+          }
+        },
+        "hints": {
+          "type": "object",
+          "properties": {
+            "simple": { "type": "string", "description": "تلميح أولي بسيط" },
+            "clear": { "type": "string", "description": "تلميح لمنطق الحل" },
+            "comprehensive": { "type": "string", "description": "شرح مفصل للخوارزمية" },
+            "solution": { "type": "string", "description": "كود الحل النموذجي C++" }
+          }
+        }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["google.com", "password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "بيانات المستخدمين الأساسية"
+    },
+    "/problems/{problemId}": {
+      "schema": "Problem",
+      "description": "بنك المسائل البرمجية المتكامل"
+    },
+    "/roadmap/{stageId}": {
+      "schema": "object",
+      "description": "مراحل خارطة الطريق والدروس التابعة لها"
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": "object",
+      "description": "تذاكر الدعم الفني والبلاغات"
+    }
+  }
+}
